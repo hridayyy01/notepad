@@ -41,5 +41,19 @@ public class Constants {
     public static final String MENU_VIEW_ZOOM_IN = "Zoom In";
     public static final String MENU_VIEW_ZOOM_OUT = "Zoom Out";
 
+    // Dialog - messages
+    public static final String MSG_UNSAVED_CHANGES = "You have unsaved changes. do you want to save before Continuing?";
+    public static final String MSG_SAVE_ERROR = "Failed to save the file";
+    public static final String MSG_OPEN_ERROR = "Failed to open the file";
+    public static final String MSG_ENCRYPT_ERROR = "Encryption Failed";
+    public static final String MSG_DECRYPT_ERROR = "Decryption Failed.Wrong Password?";
+    public static final String MSG_PASSWORD_PROMPT = "Enter Password";
+    public static final String MSG_CONFIRM_EXIT = "Exit without saving?";
+
+    // Status Bar labels
+    public static final String STATUS_LINE = "Ln";
+    public static final String STATUS_COL = "Col";
+    public static final String STATUS_WORDS = "Words";
+    public static final String STATUS_ENC = "Encoding";
 
 }

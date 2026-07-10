@@ -29,6 +29,8 @@ public class MenuBarBuilder {
     private final ActionListener onZoomIn;
     private final ActionListener onZoomOut;
 
+    private static final int MENU_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+
     public MenuBarBuilder(
             ActionListener onNew,
             ActionListener onOpen,
@@ -130,8 +132,7 @@ public class MenuBarBuilder {
         JMenuItem mi = new JMenuItem(label);
         mi.addActionListener(listener);
         if(keyCode != 0) {
-            int mask = InputEvent.CTRL_DOWN_MASK | extraMod;
-            mi.setAccelerator(KeyStroke.getKeyStroke(keyCode, mask));
+            mi.setAccelerator(KeyStroke.getKeyStroke(keyCode,MENU_MASK | extraMod));
         }
         return mi;
     }
@@ -148,7 +149,7 @@ public class MenuBarBuilder {
             }
             if(action != null) action.actionPerformed(e);
         });
-        mi.setAccelerator(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK));
+        mi.setAccelerator(KeyStroke.getKeyStroke(keyCode, MENU_MASK));
         return mi;
     }
 }

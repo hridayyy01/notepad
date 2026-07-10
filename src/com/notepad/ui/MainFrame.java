@@ -1,6 +1,7 @@
 package com.notepad.ui;
 
 import com.notepad.core.DocumentState;
+import com.notepad.core.FileManager;
 import com.notepad.utils.Constants;
 
 import javax.swing.*;
@@ -13,8 +14,9 @@ public class MainFrame extends JFrame {
     private static final int DEFAULT_HEIGHT = 650;
 
     private final DocumentState documentState;
-
     private final EditorPanel editorPanel;
+    private final FileManager fileManager;
+
     private final JCheckBoxMenuItem wordWrapItem;
     private final JCheckBoxMenuItem statusBarItem;
 
@@ -27,6 +29,7 @@ public class MainFrame extends JFrame {
         statusBarItem = new JCheckBoxMenuItem(Constants.MENU_VIEW_STATUSBAR,true);
 
         initWindow();
+        fileManager = new FileManager(this, documentState);
         setJMenuBar(buildMenuBar());
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -47,7 +50,7 @@ public class MainFrame extends JFrame {
     }
 
     private void initWindow() {
-        setTitle("Notepad");
+        setTitle(Constants.APP_NAME + "-" + Constants.UNTITLED);
         setSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -79,17 +82,49 @@ public class MainFrame extends JFrame {
         ).build();
     }
 
-    private void onNew() {}
-    private void onOpen() {}
-    private void onSave() {}
-    private void onSaveAs() {}
+    private void onNew() {
+        if(!fileManager.promptIfUnsaved(editorPanel.getText())) return;
+        editorPanel.clear();
+        documentState.reset();
+        updateTitle();
+    }
+
+    private void onOpen() {
+        if(!fileManager.promptIfUnsaved(editorPanel.getText())) return;
+        String content = fileManager.openFile();
+        if(content != null) {
+            editorPanel.setText(content);
+            updateTitle();
+        }
+    }
+
+    private void onSave() {
+        fileManager.save(editorPanel.getText());
+        updateTitle();
+    }
+
+    private void onSaveAs() {
+        fileManager.saveAs(editorPanel.getText());
+        updateTitle();
+    }
+
+    private void onExit() {
+        if(!fileManager.promptIfUnsaved(editorPanel.getText())) return;
+        System.exit(0);
+    }
+
     private void onEncrypt() {}
     private void onDecrypt() {}
-    private void onExit() {}
     private void onUndo() {}
     private void onRedo() {}
     private void onFindReplace() {}
     private void onFont() {}
     private void onZoomIn() {}
     private void onZoomOut() {}
+
+    private void updateTitle() {
+        String name = (documentState.getCurrentFilePath() != null) ? new java.io.File(documentState.getCurrentFilePath()).getName() : Constants.UNTITLED;
+        String modified = documentState.isModified() ? "*" : "";
+        setTitle(Constants.APP_NAME + " - " + name + modified);
+    }
 }
