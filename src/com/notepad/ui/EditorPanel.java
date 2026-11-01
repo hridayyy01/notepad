@@ -58,7 +58,7 @@ public class EditorPanel extends JPanel {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-
+                markModified();
             }
         });
     }

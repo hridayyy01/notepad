@@ -5,7 +5,6 @@ import com.notepad.utils.Constants;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 public class MenuBarBuilder {
@@ -63,6 +62,7 @@ public class MenuBarBuilder {
         menuBar.add(buildFileMenu());
         menuBar.add(buildEditMenu());
         menuBar.add(buildFormatMenu());
+        menuBar.add(buildViewMenu());
         return menuBar;
     }
 
@@ -112,8 +112,8 @@ public class MenuBarBuilder {
 
         menu.add(statusBarItem);
         menu.addSeparator();
-        menu.add(item(Constants.MENU_VIEW_ZOOM_IN,onZoomIn,KeyEvent.VK_PLUS,InputEvent.CTRL_DOWN_MASK));
-        menu.add(item(Constants.MENU_VIEW_ZOOM_OUT,onZoomOut,KeyEvent.VK_MINUS,InputEvent.CTRL_DOWN_MASK));
+        menu.add(item(Constants.MENU_VIEW_ZOOM_IN,onZoomIn,KeyEvent.VK_EQUALS,0));
+        menu.add(item(Constants.MENU_VIEW_ZOOM_OUT,onZoomOut,KeyEvent.VK_MINUS,0));
 
         return menu;
     }
