@@ -3,7 +3,6 @@ package com.notepad.ui;
 import com.notepad.utils.Constants;
 
 import javax.swing.*;
-import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -14,8 +13,6 @@ public class MenuBarBuilder {
     private final ActionListener onOpen;
     private final ActionListener onSave;
     private final ActionListener onSaveAs;
-    private final ActionListener onEncrypt;
-    private final ActionListener onDecrypt;
     private final ActionListener onExit;
 
     private final ActionListener onUndo;
@@ -36,8 +33,6 @@ public class MenuBarBuilder {
             ActionListener onOpen,
             ActionListener onSave,
             ActionListener onSaveAs,
-            ActionListener onEncrypt,
-            ActionListener onDecrypt,
             ActionListener onExit,
             ActionListener onUndo,
             ActionListener onRedo,
@@ -52,8 +47,6 @@ public class MenuBarBuilder {
         this.onOpen = onOpen;
         this.onSave = onSave;
         this.onSaveAs = onSaveAs;
-        this.onEncrypt = onEncrypt;
-        this.onDecrypt = onDecrypt;
         this.onExit = onExit;
         this.onUndo = onUndo;
         this.onRedo = onRedo;
@@ -81,9 +74,6 @@ public class MenuBarBuilder {
         menu.add(item(Constants.MENU_FILE_OPEN,onOpen,KeyEvent.VK_O,0));
         menu.add(item(Constants.MENU_FILE_SAVE,onSave,KeyEvent.VK_S,0));
         menu.add(item(Constants.MENU_FILE_SAVE_AS,onSaveAs,KeyEvent.VK_S,KeyEvent.SHIFT_DOWN_MASK));
-        menu.addSeparator();
-        menu.add(item(Constants.MENU_FILE_ENCRYPT,onEncrypt,KeyEvent.VK_E,InputEvent.SHIFT_DOWN_MASK));
-        menu.add(item(Constants.MENU_FILE_DECRYPT,onDecrypt,KeyEvent.VK_D,InputEvent.SHIFT_DOWN_MASK));
         menu.addSeparator();
         menu.add(item(Constants.MENU_FILE_EXIT,onExit,KeyEvent.VK_Q,0));
 

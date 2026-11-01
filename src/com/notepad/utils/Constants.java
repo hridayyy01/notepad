@@ -16,8 +16,6 @@ public class Constants {
     public static final String MENU_FILE_OPEN = "Open..";
     public static final String MENU_FILE_SAVE = "Save";
     public static final String MENU_FILE_SAVE_AS = "Save as..";
-    public static final String MENU_FILE_ENCRYPT = "Encrypt & Save";
-    public static final String MENU_FILE_DECRYPT = "Open & Decrypt";
     public static final String MENU_FILE_EXIT = "Exit";
 
     // Menu - Edit
@@ -45,9 +43,6 @@ public class Constants {
     public static final String MSG_UNSAVED_CHANGES = "You have unsaved changes. do you want to save before Continuing?";
     public static final String MSG_SAVE_ERROR = "Failed to save the file";
     public static final String MSG_OPEN_ERROR = "Failed to open the file";
-    public static final String MSG_ENCRYPT_ERROR = "Encryption Failed";
-    public static final String MSG_DECRYPT_ERROR = "Decryption Failed.Wrong Password?";
-    public static final String MSG_PASSWORD_PROMPT = "Enter Password";
     public static final String MSG_CONFIRM_EXIT = "Exit without saving?";
 
     // Status Bar labels

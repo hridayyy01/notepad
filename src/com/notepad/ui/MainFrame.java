@@ -24,7 +24,7 @@ public class MainFrame extends JFrame {
         applyLookAndFeel();
 
         documentState = new DocumentState();
-        editorPanel = new EditorPanel(documentState);
+        editorPanel = new EditorPanel(documentState, this::updateTitle);
         wordWrapItem = new JCheckBoxMenuItem(Constants.MENU_FORMAT_WRAP,true);
         statusBarItem = new JCheckBoxMenuItem(Constants.MENU_VIEW_STATUSBAR,true);
 
@@ -50,10 +50,9 @@ public class MainFrame extends JFrame {
     }
 
     private void initWindow() {
-        setTitle(Constants.APP_NAME + "-" + Constants.UNTITLED);
+        updateTitle();
         setSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setLayout(new BorderLayout());
         add(editorPanel,BorderLayout.CENTER);
@@ -68,8 +67,6 @@ public class MainFrame extends JFrame {
                 e -> onOpen(),
                 e -> onSave(),
                 e -> onSaveAs(),
-                e -> onEncrypt(),
-                e -> onDecrypt(),
                 e -> onExit(),
                 e -> onUndo(),
                 e -> onRedo(),
@@ -82,15 +79,21 @@ public class MainFrame extends JFrame {
         ).build();
     }
 
+    private boolean confirmUnsavedChanges() {
+        boolean proceed = fileManager.promptIfUnsaved(editorPanel.getText());
+        updateTitle();
+        return proceed;
+    }
+
     private void onNew() {
-        if(!fileManager.promptIfUnsaved(editorPanel.getText())) return;
+        if(!confirmUnsavedChanges()) return;
         editorPanel.clear();
         documentState.reset();
         updateTitle();
     }
 
     private void onOpen() {
-        if(!fileManager.promptIfUnsaved(editorPanel.getText())) return;
+        if(!confirmUnsavedChanges()) return;
         String content = fileManager.openFile();
         if(content != null) {
             editorPanel.setText(content);
@@ -109,12 +112,10 @@ public class MainFrame extends JFrame {
     }
 
     private void onExit() {
-        if(!fileManager.promptIfUnsaved(editorPanel.getText())) return;
+        if(!confirmUnsavedChanges()) return;
         System.exit(0);
     }
 
-    private void onEncrypt() {}
-    private void onDecrypt() {}
     private void onUndo() {}
     private void onRedo() {}
     private void onFindReplace() {}

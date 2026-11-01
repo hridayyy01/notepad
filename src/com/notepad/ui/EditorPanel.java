@@ -15,9 +15,12 @@ public class EditorPanel extends JPanel {
     private final JTextArea textArea;
     private final JScrollPane scrollPane;
     private final DocumentState documentState;
+    private final Runnable onModified;
+    private boolean replacingText;
 
-    public EditorPanel(DocumentState documentState) {
+    public EditorPanel(DocumentState documentState, Runnable onModified) {
         this.documentState = documentState;
+        this.onModified = onModified;
         setLayout(new BorderLayout());
         textArea = buildTextArea();
         scrollPane = new JScrollPane(textArea);
@@ -38,12 +41,12 @@ public class EditorPanel extends JPanel {
         textArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                documentState.markModified();
+                markModified();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                documentState.markModified();
+                markModified();
             }
 
             @Override
@@ -51,6 +54,13 @@ public class EditorPanel extends JPanel {
 
             }
         });
+    }
+
+    private void markModified() {
+        if (!replacingText) {
+            documentState.markModified();
+            onModified.run();
+        }
     }
 
     public JTextArea getTextArea() {
@@ -62,12 +72,17 @@ public class EditorPanel extends JPanel {
     }
 
     public void setText(String text) {
-        textArea.setText(text);
-        textArea.setCaretPosition(0);
+        replacingText = true;
+        try {
+            textArea.setText(text);
+            textArea.setCaretPosition(0);
+        } finally {
+            replacingText = false;
+        }
     }
 
     public void clear() {
-        textArea.setText("");
+        setText("");
     }
 
     public void setWordWrap(boolean wrap) {

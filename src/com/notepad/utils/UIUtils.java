@@ -27,18 +27,4 @@ public final class UIUtils {
         return (result != null) ? result.trim() : null;
     }
 
-    public static char[] showPasswordDialog(Component parent, String message) {
-        JPasswordField pf = new JPasswordField(24);
-        int option = JOptionPane.showConfirmDialog(
-                parent,
-                new Object[] {message, pf},
-                Constants.APP_NAME,
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE
-        );
-        if(option == JOptionPane.OK_OPTION) {
-            return pf.getPassword();
-        }
-        return null;
-    }
 }
