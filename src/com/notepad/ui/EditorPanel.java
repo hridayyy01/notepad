@@ -5,6 +5,7 @@ import com.notepad.core.DocumentState;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.undo.UndoManager;
 import java.awt.*;
 
 public class EditorPanel extends JPanel {
@@ -16,6 +17,7 @@ public class EditorPanel extends JPanel {
     private final JScrollPane scrollPane;
     private final DocumentState documentState;
     private final Runnable onModified;
+    private final UndoManager undoManager = new UndoManager();
     private boolean replacingText;
 
     public EditorPanel(DocumentState documentState, Runnable onModified) {
@@ -26,6 +28,11 @@ public class EditorPanel extends JPanel {
         scrollPane = new JScrollPane(textArea);
         add(scrollPane, BorderLayout.CENTER);
         wireDocumentListener();
+        textArea.getDocument().addUndoableEditListener(e -> {
+            if (!replacingText) {
+                undoManager.addEdit(e.getEdit());
+            }
+        });
     }
 
     private JTextArea buildTextArea() {
@@ -78,11 +85,65 @@ public class EditorPanel extends JPanel {
             textArea.setCaretPosition(0);
         } finally {
             replacingText = false;
+            undoManager.discardAllEdits();
         }
     }
 
     public void clear() {
         setText("");
+    }
+
+    public void undo() {
+        if (undoManager.canUndo()) {
+            undoManager.undo();
+        }
+    }
+
+    public void redo() {
+        if (undoManager.canRedo()) {
+            undoManager.redo();
+        }
+    }
+
+    public boolean findNext(String search) {
+        if (search.isEmpty()) return false;
+
+        String content = getText();
+        int index = content.indexOf(search, textArea.getSelectionEnd());
+        if (index == -1) {
+            index = content.indexOf(search);
+        }
+        if (index == -1) return false;
+
+        textArea.select(index, index + search.length());
+        // Keep the match visible while the Find & Replace dialog has focus.
+        textArea.getCaret().setSelectionVisible(true);
+        return true;
+    }
+
+    public boolean replace(String search, String replacement) {
+        if (search.isEmpty()) return false;
+
+        if (search.equals(textArea.getSelectedText())) {
+            textArea.replaceSelection(replacement);
+        }
+        return findNext(search);
+    }
+
+    public int replaceAll(String search, String replacement) {
+        if (search.isEmpty()) return 0;
+
+        String content = getText();
+        int count = 0;
+        int index = content.indexOf(search);
+        while (index != -1) {
+            count++;
+            index = content.indexOf(search, index + search.length());
+        }
+        if (count > 0) {
+            textArea.replaceRange(content.replace(search, replacement), 0, content.length());
+        }
+        return count;
     }
 
     public void setWordWrap(boolean wrap) {

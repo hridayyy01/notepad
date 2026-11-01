@@ -16,6 +16,7 @@ public class MainFrame extends JFrame {
     private final DocumentState documentState;
     private final EditorPanel editorPanel;
     private final FileManager fileManager;
+    private FindReplaceDialog findReplaceDialog;
 
     private final JCheckBoxMenuItem wordWrapItem;
     private final JCheckBoxMenuItem statusBarItem;
@@ -116,9 +117,21 @@ public class MainFrame extends JFrame {
         System.exit(0);
     }
 
-    private void onUndo() {}
-    private void onRedo() {}
-    private void onFindReplace() {}
+    private void onUndo() {
+        editorPanel.undo();
+    }
+
+    private void onRedo() {
+        editorPanel.redo();
+    }
+
+    private void onFindReplace() {
+        if (findReplaceDialog == null) {
+            findReplaceDialog = new FindReplaceDialog(this, editorPanel);
+        }
+        findReplaceDialog.setVisible(true);
+    }
+
     private void onFont() {}
     private void onZoomIn() {}
     private void onZoomOut() {}
